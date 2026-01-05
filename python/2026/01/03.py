@@ -1,0 +1,50 @@
+# Left-Handed Seat at the Table
+
+# Given a 4x2 matrix (array of arrays) representing the seating arrangement for a meal, determine how many seats a left-handed person can sit at.
+
+#     A left-handed person cannot sit where a right-handed person would be in the seat to the immediate left of them.
+
+# In the given matrix:
+
+#     An "R" is a seat occupied by a right-handed person.
+#     An "L" is a seat occupied by a left-handed person.
+#     An "U" is an unoccupied seat.
+#     Only unoccupied seats are available to sit at.
+#     The seats in the top row are facing "down", and the seats in the bottom row are facing "up" (like a table), so left and right are relative to the seat's orientation.
+#     Corner seats only have one seat next to them.
+
+# For example, in the given matrix:
+
+# [
+#   ["U", "R", "U", "L"],
+#   ["U", "R", "R", "R"]
+# ]
+
+# The top-left seat is cannot be sat in because there's a right-handed person to the left. The other two open seats can be sat in because there isn't a right-handed person to the left.
+
+
+# 1. find_left_handed_seats([["U", "R", "U", "L"], ["U", "R", "R", "R"]]) should return 2.
+# 2. find_left_handed_seats([["U", "U", "U", "U"], ["U", "U", "U", "U"]]) should return 8.
+# 3. find_left_handed_seats([["U", "R", "U", "R"], ["L", "R", "R", "U"]]) should return 0.
+# 4. find_left_handed_seats([["L", "U", "R", "R"], ["L", "U", "R", "R"]]) should return 1.
+# 5. find_left_handed_seats([["U", "R", "U", "U"], ["U", "U", "L", "U"]]) should return 5.
+
+def find_left_handed_seats(table):
+    availableSeats = 0 
+    for seat in range(3):
+        if table[0][seat] == "U" and table[0][seat + 1] != "R":
+            availableSeats += 1
+        if table[1][seat] == "U" and table[0][seat - 1] != "R":
+            availableSeats += 1
+    if table[0][3] == "U":
+            availableSeats += 1
+    if table[1][3] == "U" and table[0][3] != "R":
+        availableSeats += 1
+    return availableSeats
+
+
+print(find_left_handed_seats([["U", "R", "U", "L"], ["U", "R", "R", "R"]]))
+print(find_left_handed_seats([["U", "U", "U", "U"], ["U", "U", "U", "U"]]))
+print(find_left_handed_seats([["U", "R", "U", "R"], ["L", "R", "R", "U"]]))
+print(find_left_handed_seats([["L", "U", "R", "R"], ["L", "U", "R", "R"]]))
+print(find_left_handed_seats([["U", "R", "U", "U"], ["U", "U", "L", "U"]]))
