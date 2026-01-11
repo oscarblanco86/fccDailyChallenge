@@ -48,17 +48,3 @@ print(parse_unordered_list("- Item A\n- Item B"))
 print(parse_unordered_list("-  JavaScript\n-  Python"))
 print(parse_unordered_list("- 2 C Flour\n- 1/2 C Sugar\n- 1 Tsp Vanilla"))
 print(parse_unordered_list("- A-1\n- A-2\n- B-1"))
-
-
-<ul><li>Item A</li><li>Item B</li></ul>".
-<ul><li>Item A</li><li>Item B</li></ul>
-<ul><li>Item A</li><li>Item B</li></ul>
-<ul><li>JavaScript</li><li>Python</li></ul>".
-<ul><li>JavaScript</li><li>Python</li></ul>
-<ul><li>JavaScript</li><li>Python</li></ul>
-<ul><li>2 C Flour</li><li>1/2 C Sugar</li><li>1 Tsp Vanilla</li></ul>".
-<ul><li>2 C Flour</li><li>1/2 C Sugar</li><li>1 Tsp Vanilla</li></ul>
-<ul><li>2 C Flour</li><li>1/2 C Sugar</li><li>1 Tsp Vanilla</li></ul>
-<ul><li>A-1</li><li>A-2</li><li>B-1</li></ul>".
-<ul><li>A-1</li><li>A-2</li><li>B-1</li></ul>
-<ul><li>A-1</li><li>A-2</li><li>B-1</li></ul>
