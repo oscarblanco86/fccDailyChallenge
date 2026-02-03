@@ -18,8 +18,16 @@
 // 8. isValidHex("fff") should return false.
 
 function isValidHex(str) {
-    
-  return str;
+    if (str.charAt(0) !== "#") return false
+
+    if (str.length !== 4 && str.length !== 7) return false
+
+    const valid = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
+    for (let ch of str.slice(1)) {   // skip the #
+        if (!valid.includes(ch.toLowerCase())) return false
+    }
+
+    return true
 }
 
 console.log(isValidHex("#123"))
