@@ -61,3 +61,21 @@ print(get_sign("1985-12-06"))
 print(get_sign("2025-12-30"))
 print(get_sign("2018-10-08"))
 print(get_sign("1958-05-04"))
+
+# Corrected by copilot version:
+# def get_sign(date_str):
+#     year, month, day = date_str.split("-")
+#     month_name = calendar.month_name[int(month)]
+#     day = int(day)
+
+#     for date, zodiac in date_zodiac.items():
+#         start_date, end_date = date.split(" - ")
+#         start_month, start_day = start_date.split(" ")
+#         end_month, end_day = end_date.split(" ")
+
+#         start_day = int(start_day)
+#         end_day = int(end_day)
+
+#         if (month_name == start_month and day >= start_day) or \
+#            (month_name == end_month and day <= end_day):
+#             return zodiac
