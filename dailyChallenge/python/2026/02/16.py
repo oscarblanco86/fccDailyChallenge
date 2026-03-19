@@ -1,148 +1,62 @@
-# 2026 Winter Games Day 16: Curling
+# 2026 Winter Games Day 11: Ice Hockey
 
-# Given a 5x5 matrix representing the "house" at the end of a curling round, determine which team scores and how many points they score.
+# Given an array of 6 ice hockey teams and their records after the round robin games, determine the match-ups for the semi-final round.
 
-# The layout:
+#     Each array item will have a team and their record in the format "TEAM: W-OTW-OTL-L". Where:
+#         "W" is the number of wins in regulation, worth 3 points each
+#         "OTW" is the number of overtime wins, worth 2 points each
+#         "OTL" is the number of overtime losses, worth 1 point each
+#         "L" is the number of losses, worth 0 points each
 
-#     The center cell (index [2, 2]) is the "button".
-#     The 8 cells directly surrounding the button represent ring 1.
-#     And the 16 cells on the outer edge of the house represent ring 2.
+# For example, "FIN: 2-2-1-0" would have 11 points after adding up their record.
 
-# In the given matrix:
-
-#     "." represents an empty space.
-#     "R" represents a space with a red stone.
-#     "Y" represents a space with a yellow stone.
-
-# Scoring rules:
-
-#     Only one team can score per round.
-#     The team with the stone closest to the button scores.
-#     The scoring team earns 1 point for each of their stones that is closer to the button than the opponent's closest stone.
-#     The lower the ring number, the closer to the center the stone is.
-#     If both teams' closest stone is the same distance from the center, no team scores.
-
-# Return:
-
-#     A string in the format "team: number_of_points". e.g: "R: 2".
-#     or "No points awarded" if neither team scored any points.
-
-# For example, given:
-
-# [
-#   [".", ".", "R", ".", "."],
-#   [".", "R", ".", ".", "."],
-#   ["Y", ".", ".", ".", "."],
-#   [".", "R", ".", ".", "."],
-#   [".", ".", ".", ".", "."]
-# ]
-
-# Return "R: 2". The two red stones in ring 1 are tied for the closest and are the only two stones closer than yellows closest.
+# Find the total number of points for each team and return "The semi-final games will be (1st) vs (4th) and (2nd) vs (3rd).". For example, "The semi-final games will be FIN vs SWE and CAN vs USA."
 # Tests:
 
-# 1. score_curling([[".", ".", "R", ".", "."], [".", "R", ".", ".", "."], ["Y", ".", ".", ".", "."], [".", "R", ".", ".", "."], [".", ".", ".", ".", "."]]) should return "R:2".
-# 2. score_curling([[".", ".", "R", ".", "."], [".", ".", ".", ".", "."], [".", ".", "Y", ".", "R"], [".", ".", "Y", "Y", "."], [".", "Y", "R", "R", "."]]) should return "Y: 3".
-# 3. score_curling([[".", "R", "Y", ".", "."], ["Y", ".", ".", ".", "."], [".", ".", ".", ".", "."], [".", "Y", "R", "Y", "."], [".", ".", "R", "R", "."]]) should return "No points awarded".
-# 4. score_curling([[".", "Y", "Y", ".", "."], ["Y", ".", ".", "R", "."], [".", ".", "R", ".", "."], [".", ".", "R", "R", "."], [".", "Y", "R", "Y", "."]]) should return "R: 4".
-# 5. score_curling([["Y", "Y", "Y", "Y", "Y"], ["Y", "R", "R", "R", "Y"], ["Y", "R", "Y", "R", "Y"], ["Y", "R", "R", "R", "Y"], ["Y", "Y", "Y", "Y", "Y"]]) should return "Y: 1".
-# 6. score_curling([["Y", "R", "Y", "R", "Y"], ["R", ".", ".", ".", "R"], ["Y", ".", ".", ".", "Y"], ["R", ".", ".", ".", "R"], ["Y", ".", ".", "R", "Y"]]) should return "No points awarded".
+#     Waiting: 1. get_semifinal_matchups(["CAN: 2-2-0-1", "FIN: 2-2-1-0", "GER: 1-0-1-3", "SUI: 0-1-3-1", "SWE: 1-1-2-1", "USA: 2-1-0-2"]) should return "The semi-final games will be FIN vs SWE and CAN vs USA.".
+#     Waiting: 2. get_semifinal_matchups(["CAN: 2-1-1-1", "CZE: 1-1-1-2", "FIN: 1-2-1-1", "NOR: 0-1-1-3", "SLO: 1-0-1-3", "USA: 5-0-0-0"]) should return "The semi-final games will be USA vs CZE and CAN vs FIN.".
+#     Waiting: 3. get_semifinal_matchups(["CAN: 3-2-0-0", "CZE: 2-1-2-0", "LAT: 0-0-1-4", "ITA: 1-1-1-2", "DEN: 1-0-0-4", "USA: 3-1-1-0"]) should return "The semi-final games will be CAN vs ITA and USA vs CZE.".
+#     Waiting: 4. get_semifinal_matchups(["AUT: 2-2-1-0", "DEN: 1-0-0-4", "ITA: 1-1-1-2", "JPN: 3-2-0-0", "KOR: 2-1-2-0", "LAT: 0-0-1-4"]) should return "The semi-final games will be JPN vs ITA and AUT vs KOR.".
 
 
-def score_curling(house):
-    ring2 = ["0,0", "0,1", "0,2", "0,3", "0,4", "1,0", "1,4", "2,0", "2,4", "3,0", "3,4", "4,0", "4,1", "4,2", "4,3", "4,4",]
-    ring1 = ["1,1", "1,2", "1,3", "2,1", "2,2", "2,3", "3,1", "3,2", "3,3",]
-    
-    scores = {}
-    ring1_scores = {}
-    ring2_scores = {}
+def get_semifinal_matchups(teams):
+    team_scores = {}
+    sorted_team = []
+    for team in teams:
+        ctry, scores = team.split(": ")
+        score = scores.split("-")
+        points = 0
+        value = 3
+        for sc in score:
+            points += value * int(sc)
+            value -= 1
 
-    for index_l, l in enumerate(house):
-        for index_c, c in enumerate(l):
-            if str(index_l) + "," + str(index_c) in ring1:
-                if c not in ["."]:
-                    scores[c + "ring1"] = scores.get(c + "ring1", 0) + 1
-                    ring1_scores[c] = ring1_scores.get(c, 0) + 1 
-            if str(index_l) + "," + str(index_c) in ring2:
-                if c not in ["."]:
-                    scores[c + "ring2"] = scores.get(c + "ring2", 0) + 1
-                    ring2_scores[c] = ring2_scores.get(c, 0) + 1 
-    if house[2][2] not in ["."]:
-        return f"{house[2][2]}: {scores[house[2][2] + "ring1"]}"
-    sorted_scores = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
-
-    if len(ring1_scores) > 1:
-        return "No points awarded"
-
-    if len(ring1_scores) == 0  and len(ring2_scores) > 1:
-        return "No points awarded"
-
-    return f"{list(sorted_scores.items())[0][0][:1]}: {list(sorted_scores.items())[0][1]}"
+        team_scores[ctry] = points
+    sort_team_scores = dict(sorted(team_scores.items(), key=lambda item: item[1], reverse=True))
+    for k, s in sort_team_scores.items():
+        sorted_team.append(k)
 
 
 
-print(
-    score_curling(
-        [
-            [".", ".", "R", ".", "."],
-            [".", "R", ".", ".", "."],
-            ["Y", ".", ".", ".", "."],
-            [".", "R", ".", ".", "."],
-            [".", ".", ".", ".", "."],
-        ]
-    )
-)
-print(
-    score_curling(
-        [
-            [".", ".", "R", ".", "."],
-            [".", ".", ".", ".", "."],
-            [".", ".", "Y", ".", "R"],
-            [".", ".", "Y", "Y", "."],
-            [".", "Y", "R", "R", "."],
-        ]
-    )
-)
-print(
-    score_curling(
-        [
-            [".", "R", "Y", ".", "."],
-            ["Y", ".", ".", ".", "."],
-            [".", ".", ".", ".", "."],
-            [".", "Y", "R", "Y", "."],
-            [".", ".", "R", "R", "."],
-        ]
-    )
-)
-print(
-    score_curling(
-        [
-            [".", "Y", "Y", ".", "."],
-            ["Y", ".", ".", "R", "."],
-            [".", ".", "R", ".", "."],
-            [".", ".", "R", "R", "."],
-            [".", "Y", "R", "Y", "."],
-        ]
-    )
-)
-print(
-    score_curling(
-        [
-            ["Y", "Y", "Y", "Y", "Y"],
-            ["Y", "R", "R", "R", "Y"],
-            ["Y", "R", "Y", "R", "Y"],
-            ["Y", "R", "R", "R", "Y"],
-            ["Y", "Y", "Y", "Y", "Y"],
-        ]
-    )
-)
-print(
-    score_curling(
-        [
-            ["Y", "R", "Y", "R", "Y"],
-            ["R", ".", ".", ".", "R"],
-            ["Y", ".", ".", ".", "Y"],
-            ["R", ".", ".", ".", "R"],
-            ["Y", ".", ".", "R", "Y"],
-        ]
-    )
-)
+    return f"The semi-final games will be {sorted_team[0]} vs {sorted_team[3]} and {sorted_team[1]} vs {sorted_team[2]}."
+
+## copilot version
+# def get_semifinal_matchups(teams):
+#     team_scores = {}
+
+#     for entry in teams:
+#         team, record = entry.split(": ")
+#         W, OTW, OTL, L = map(int, record.split("-"))
+#         points = 3*W + 2*OTW + 1*OTL
+#         team_scores[team] = points
+
+#     sorted_teams = sorted(team_scores, key=lambda t: team_scores[t], reverse=True)
+
+#     return f"The semi-final games will be {sorted_teams[0]} vs {sorted_teams[3]} and {sorted_teams[1]} vs {sorted_teams[2]}."
+
+
+
+print(get_semifinal_matchups(["CAN: 2-2-0-1", "FIN: 2-2-1-0", "GER: 1-0-1-3", "SUI: 0-1-3-1", "SWE: 1-1-2-1", "USA: 2-1-0-2"]))
+print(get_semifinal_matchups(["CAN: 2-1-1-1", "CZE: 1-1-1-2", "FIN: 1-2-1-1", "NOR: 0-1-1-3", "SLO: 1-0-1-3", "USA: 5-0-0-0"]))
+print(get_semifinal_matchups(["CAN: 3-2-0-0", "CZE: 2-1-2-0", "LAT: 0-0-1-4", "ITA: 1-1-1-2", "DEN: 1-0-0-4", "USA: 3-1-1-0"]))
+print(get_semifinal_matchups(["AUT: 2-2-1-0", "DEN: 1-0-0-4", "ITA: 1-1-1-2", "JPN: 3-2-0-0", "KOR: 2-1-2-0", "LAT: 0-0-1-4"]))
