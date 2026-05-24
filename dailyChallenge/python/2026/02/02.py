@@ -34,3 +34,12 @@ print(groundhog_day_prediction(False))
 print(groundhog_day_prediction(None))
 print(groundhog_day_prediction(" "))
 print(groundhog_day_prediction("True"))
+
+# Shorter Pythoninc:
+# def groundhog_day_prediction(appearence):
+#     if appearence is True:
+#         return "Looks like we'll have six more weeks of winter."
+#     elif appearence is False:
+#         return "It's going to be an early spring."
+#     else:
+#         return "No prediction this year."
