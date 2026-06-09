@@ -1,29 +1,43 @@
-# Groundhog Day
+# Deepest Brackets
 
-# Today is Groundhog Day, in which a groundhog predicts the weather based on whether or not it sees its shadow.
+# Given a string containing balanced brackets, return the content of the deepest nested brackets.
 
-# Given a value representing the groundhog's appearance, return the correct prediction:
+#     Brackets can be any of the three types: (), [], and {}.
+#     The input will always have a single deepest group.
 
-#     If the given value is the boolean true (the groundhog saw its shadow), return "Looks like we'll have six more weeks of winter.".
-#     If the value is the boolean false (the groundhog did not see its shadow), return "It's going to be an early spring.".
-#     If the value is anything else (the groundhog did not show up), return "No prediction this year.".
-
+# For example, given "(hello (world))", return "world".
 # Tests:
 
-#     Waiting: 1. groundhog_day_prediction(True) should return "Looks like we'll have six more weeks of winter.".
-#     Waiting: 2. groundhog_day_prediction(False) should return "It's going to be an early spring.".
-#     Waiting: 3. groundhog_day_prediction(None) should return "No prediction this year.".
-#     Waiting: 4. groundhog_day_prediction(" ") should return "No prediction this year.".
-#     Waiting: 5. groundhog_day_prediction("True") should return "No prediction this year.".
-
-def groundhog_day_prediction(appearance):
-    if appearance == True: return "Looks like we'll have six more weeks of winter."
-    if appearance == False: return "It's going to be an early spring."
-    return "No prediction this year."
+#     Waiting: 1. get_deepest_brackets("(hello (world))") should return "world".
+#     Waiting: 2. get_deepest_brackets("[outer [inner] outer]") should return "inner".
+#     Waiting: 3. get_deepest_brackets("{a{b}c{d{e}f}g}") should return "e".
+#     Waiting: 4. get_deepest_brackets("[the {quick (brown [fox] jumped) over (the) lazy} dog]") should return "fox".
+#     Waiting: 5. get_deepest_brackets("f[(r)e{e}C{o[(d){e(C)}a]m}]p") should return "C".
 
 
-print(groundhog_day_prediction(True))
-print(groundhog_day_prediction(False))
-print(groundhog_day_prediction(None))
-print(groundhog_day_prediction(" "))
-print(groundhog_day_prediction("True"))
+def get_deepest_brackets(s):
+    depth = 0
+    content = ''
+    content_depth = 0
+    for ch in s:
+        if ch in ["(","[","{"]:
+            depth += 1
+            if depth > content_depth: 
+                content = ''
+                content_depth = depth
+            continue
+        if ch in [")","]","}"]:
+            depth -= 1
+            continue
+        if content_depth == depth:
+            content += ch
+            
+    return content
+
+
+
+print(get_deepest_brackets("(hello (world))"))
+print(get_deepest_brackets("[outer [inner] outer]"))
+print(get_deepest_brackets("{a{b}c{d{e}f}g}"))
+print(get_deepest_brackets("[the {quick (brown [fox] jumped) over (the) lazy} dog]"))
+print(get_deepest_brackets("f[(r)e{e}C{o[(d){e(C)}a]m}]p"))
